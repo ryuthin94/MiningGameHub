@@ -1,10 +1,12 @@
 name: Deploy to GitHub Pages
 
+# Trigger workflow on push to main or manual dispatch
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+# Required permissions for Pages
 permissions:
   contents: read
   pages: write
@@ -14,17 +16,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+          node-version: '20'
+          cache: 'npm'
+          
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+        
+      # Build project
+      - name: Build
+        run: npm run build
+        
+      # Upload Pages artifact
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist/public
+          path: ./dist/public         # Your build output folder
           artifact_name: github-pages
 
   deploy:
@@ -34,6 +49,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
