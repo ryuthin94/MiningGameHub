@@ -14,6 +14,11 @@ export default defineConfig({
     runtimeErrorOverlay(),
     glsl(), // Add GLSL shader support
   ],
+  server: {
+    host: '0.0.0.0', // Listen on all network interfaces
+    port: 5173, // Default Vite port
+  },
+  base: '/MiningGameHub/', // Add base URL for GitHub Pages
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
